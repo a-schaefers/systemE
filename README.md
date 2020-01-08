@@ -3,13 +3,17 @@ A lightweight systemd replacement written in Emacs lisp
 
 ## About
 
-Currently between using the tooling in this repo and my [.emacs dotfiles](https://github.com/a-schaefers/dotfiles), I am able to boot from linux to sinit as pid1 straight into Emacs, and additionally use Emacs as a login shell, dotfiles manager, startx / xinitrc replacement, and Window Manager. I have nearly purged shell scrips from my life entirely.
+Using the tooling in this repo, I am able to boot from linux to sinit as pid1, and from there straight into Emacs as pid3? using --script mode, performing all typical rc.boot system initialization using Emacs lisp all the way to the getty.
 
-The plan is to update this repo as I progress in making my machine more "lispy." by rolling my own init system.
+Additionally from the getty, I use Emacs as a login shell, dotfiles manager, startx / xinitrc replacement, and Window Manager. I have nearly purged shell scrips from my life entirely. For more information about these things, see my [.emacs and dotfiles](https://github.com/a-schaefers/dotfiles) repo.
 
-## This repo is techinically a kiss linux overlay.
+The plan is to update this repo as I progress in making my machine more "lispy."
 
-It compiles and installs all project dependencies "batteries included" to /boot using the kiss build system from kisslinux (getkiss.org)
+## This repo is technically an Emacs [kiss linux](getkiss.org) package
+
+I took some shortcuts in packaging it and it is not an exemplary example of a kiss package __at all__. It's very hacky. However it does display the flexibility and simplicity which makes the kiss package manager fun to work with.
+
+So this repo compiles and installs all of my project dependencies "batteries included" to /boot ...
 
 This includes:
 - sinit
@@ -28,7 +32,7 @@ Currently we depend on busybox runit for a process supervisor and this needs to 
 
 One pain point is getting a statically compiled Emacs. We don't require this, but it sure would be nice. Unfortunately, when I statically compile Emacs using musl, it results in a broken Emacs.
 
-### The ever-growing Helpful / Credits / Thanks:
+### The ever-growing list of Helpful / Credits / Thank You's
 
 ```elisp
 ;; https://github.com/kisslinux/init/blob/master/lib/init/rc.boot
