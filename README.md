@@ -11,11 +11,11 @@ Additionally from the getty, I use Emacs as a login shell, dotfiles manager, pac
 
 ## Status
 
-- The boot.el and shutdown.el scripts are [nearly] finished and I use them on my local machine. No support for fancy stuff like luks is planned.
+- The boot.el and shutdown.el scripts are finished and I use them on my local machine. No support for fancy stuff like luks is planned.
 
-- Currently we depend on suckless.org's sinit for PID1 and this needs to be rewritten in in elisp.
+- We still depend on [suckless.org's](http://suckless.org) sinit for PID1 and this needs to be rewritten in in elisp.
 
-- Currently we depend on busybox runit for a process supervisor and this needs to be reimplemented in elisp, or atleast converted to gnu shepherd.
+- We still depend on busybox runit for a process supervisor and this needs to be reimplemented in elisp, or atleast converted to gnu shepherd.
 
 - One pain point is getting a statically compiled Emacs. We don't require this, but it sure would be nice. Unfortunately, when I statically compile Emacs using musl, it results in a broken Emacs.
 
