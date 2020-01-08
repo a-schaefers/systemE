@@ -41,13 +41,13 @@
 
 (progn
   (message "Sending TERM signal to all processes...")
-  ;; (shell-command (concat "ubase-box killall5 -o " (format "%s" (emacs-pid)) " -s TERM"))
   (message "%s"
            (process-exit-code-and-output
             "ubase-box" "killall5" "-o" (format "%s" (emacs-pid)) "-s" "TERM"))
+
   (sleep-for 1)
+
   (message "Sending KILL signal to all processes...")
-  ;; (shell-command (concat "ubase-box killall5 -o " (format "%s" (emacs-pid)) " -s KILL"))
   (message "%s"
            (process-exit-code-and-output
             "ubase-box" "killall5" "-o" (format "%s" (emacs-pid)) "-s" "KILL")))
