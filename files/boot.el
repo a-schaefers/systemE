@@ -1,25 +1,21 @@
-#!/bin/setsid /bin/dash
-":"; exec /boot/emacs/bin/emacs --quick --script "$0" "$@" </dev/tty1 >/dev/tty1 2>&1 # -*- mode: emacs-lisp; lexical-binding: t; -*-
+#!/bin/setsid /boot/bin/dash
+":"; LD_LIBRARY_PATH=/boot/emacs exec /boot/bin/emacs --quick --script "$0" "$@" </dev/tty1 >/dev/tty1 2>&1 # -*- mode: emacs-lisp; lexical-binding: t; -*-
+
+(setq debug-on-error nil)
+
+(setenv "PATH" "/boot/bin:/bin")
+(setq exec-path '("/boot/bin" "/bin"))
+
+(setenv "SHELL" "/boot/bin/dash")
+(setq shell-file-name "/boot/bin/dash")
 
 (require 'subr-x)
-
-(setenv "PATH" "/bin")
-(setenv "SHELL" "/bin/dash")
-
-(setq exec-path '("/bin")
-      shell-file-name "/bin/dash"
-      debug-on-error nil)
 
 (defun process-exit-code-and-output (program &rest args)
   "Run PROGRAM with ARGS and return the exit code and output in a list."
   (with-temp-buffer
     (list (apply 'call-process program nil (current-buffer) nil args)
           (buffer-string))))
-
-(defun split-file (FILE delim)
-  (with-temp-buffer
-    (insert-file-contents FILE)
-    (split-string (buffer-string) delim t)))
 
 (message
  (concat "Welcome to KISS " (shell-command-to-string "uname -sr")))
@@ -36,7 +32,6 @@
          (process-exit-code-and-output
           "ubase-box" "mount" "-o" "mode=0755,nosuid,nodev" "-t" "tmpfs" "run" "/run"))
 
-;; already mounted by kernel in my case
 (message "%s"
          (process-exit-code-and-output
           "ubase-box" "mount" "-o" "mode=0755,nosuid" "-t" "devtmpfs" "dev" "/dev"))
@@ -134,15 +129,15 @@
   (message "%s"
            (process-exit-code-and-output "ip" "link" "set" "up" "dev" "lo")))
 
-(shell-command-to-string "grep /etc/")
-
 (progn
   (message "Setting hostname...")
   (or
    (and
     (setq hostname
           (and (file-exists-p "/etc/hostname")
-               (string-trim (format "%s" (split-file "/etc/hostname" "\n")) "(" ")")))
+               (with-temp-buffer
+                 (insert-file-contents "/etc/hostname")
+                 (string-trim (buffer-string)))))
     (message "%s"
              (shell-command (concat "echo " hostname " > /proc/sys/kernel/hostname"))))
    (message "%s"
