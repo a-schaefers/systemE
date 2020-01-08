@@ -1,0 +1,63 @@
+#!/bin/sh -e
+
+# bootstrap systemE to /boot
+
+# boot script
+install -Dm 755 boot.el "$1/boot/boot.el"
+# shutdown script
+# TODO
+
+# sinit
+wget https://dl.suckless.org/sinit/sinit-1.0.tar.gz
+echo "78c2120a97a5e93b80606c5403bd731152f8a344e47aa4ab74970c1c11dc6fc0" sinit-1.0.tar.gz | sha256sum -c -
+tar zxvf sinit-1.0.tar.gz
+cat << EOF > sinit-1.0/config.h
+static char *const rcinitcmd[]     = { "/boot/boot.el", NULL };
+static char *const rcrebootcmd[]   = { "/lib/init/rc.shutdown", "reboot", NULL };
+static char *const rcpoweroffcmd[] = { "/lib/init/rc.shutdown", "poweroff", NULL };
+EOF
+cd sinit-1.0
+make CFLAGS="$CFLAGS -static"
+install -Dm 755 sinit "$1/boot/sinit"
+cd ..
+
+# sbase
+wget https://github.com/michaelforney/sbase/archive/6089583.tar.gz
+echo "c27481959306cf29e2eed592f4c527faccf586c83c8dd950e256008978278573" 6089583.tar.gz | sha256sum -c -
+tar zxvf 6089583.tar.gz
+cd sbase*
+make CFLAGS="$CFLAGS -static" sbase-box
+install -Dm 755 sbase-box "$1/boot/sbase-box"
+cd ..
+
+# ubase
+wget https://github.com/michaelforney/ubase/archive/b33bdaa.tar.gz
+echo "2fd1cd03b9ea9b0d08a523634be942177f1a370daa9a120e0279316003fb0ec1" b33bdaa.tar.gz | sha256sum -c -
+tar zxvf b33bdaa.tar.gz
+cd ubase*
+make CFLAGS="$CFLAGS -static" ubase-box
+install -Dm 755 ubase-box "$1/boot/ubase-box"
+cd ..
+
+# dash
+wget http://gondor.apana.org.au/~herbert/dash/files/dash-0.5.10.2.tar.gz
+echo "3c663919dc5c66ec991da14c7cf7e0be8ad00f3db73986a987c118862b5f6071" dash-0.5.10.2.tar.gz | sha256sum -c -
+tar zxvf dash-0.5.10.2.tar.gz
+cd dash-0.5.10.2
+CFLAGS="$CFLAGS -static" ./configure --prefix=/boot --exec-prefix=/boot
+make DESTDIR="$1" install
+cd ..
+
+# and a text editor
+# s/text editor/operating system/g
+./configure \
+    --exec-prefix=/boot \
+    --prefix=/boot/emacs \
+    --with-modules \
+    --without-all \
+    --without-x \
+    --with-x-toolkit=no \
+    --with-x=no
+
+make
+make DESTDIR="$1" install
