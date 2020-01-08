@@ -3,7 +3,7 @@ A lightweight systemd replacement written in Emacs lisp
 
 ## About
 
-Using the tooling in this repo, I am able to boot from linux to sinit as pid1, and from there to Emacs acting as pid2 more or less, and using --script mode, performing all typical rc.boot system initialization using Emacs lisp until we hit the getty.
+Using the tooling in this repo, I am able to boot from linux to sinit as pid1, and from there to Emacs acting as pid2 using --script mode, performing all typical rc.boot system initialization using Emacs lisp until we hit the getty.
 
 Additionally from the getty, I use Emacs as a login shell, dotfiles manager, package-manager front-end, startx / xinitrc replacement, and Window Manager. I have nearly purged shell scrips from my life entirely. For more information about these things, see my [.emacs repo](https://github.com/a-schaefers/dotfiles).
 
