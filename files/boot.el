@@ -160,7 +160,7 @@
 (message "Boot stage complete...")
 
 ;; getty
-(call-process-shell-command "nohup ubase-box respawn ubase-box getty /dev/tty1 linux &" nil nil 0)
+(call-process-shell-command "nohup ubase-box respawn ubase-box login &" nil nil 0)
 (call-process-shell-command "nohup ubase-box respawn ubase-box getty /dev/tty2 linux &" nil nil 0)
 (call-process-shell-command "nohup ubase-box respawn ubase-box getty /dev/tty3 linux &" nil nil 0)
 (call-process-shell-command "nohup ubase-box respawn ubase-box getty /dev/tty4 linux &" nil nil 0)
