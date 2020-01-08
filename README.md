@@ -9,19 +9,19 @@ Additionally from the getty, I use Emacs as a login shell, dotfiles manager, pac
 
 ## Status
 
-- The elisp rc.boot and rc.shutdown scripts are [nearly] finished and I use them on my local machine. No support for fancy stuff like luks is planned.
+- The boot.el and shutdown.el scripts are [nearly] finished and I use them on my local machine. No support for fancy stuff like luks is planned.
 
 - Currently we depend on suckless.org's sinit for pid1 and this needs to be rewritten in in elisp.
 
-- Currently we depend on busybox runit for a process supervisor and this needs to be reimplemented in elisp, or atleast converted to gnu shepherd or something lispy.
+- Currently we depend on busybox runit for a process supervisor and this needs to be reimplemented in elisp, or atleast converted to gnu shepherd.
 
 - One pain point is getting a statically compiled Emacs. We don't require this, but it sure would be nice. Unfortunately, when I statically compile Emacs using musl, it results in a broken Emacs.
 
-## This repo is technically a  [kiss linux](https://getkiss.org) package
+## This repo is technically a [kiss linux](https://getkiss.org) package
 
 I don't recommend you install this as a package if you use Kiss Linux though. Instead I would recommend you poke around at it and see if you find anything that is useful for yourself that way.
 
-I took some shortcuts in packaging it and it is not an exemplary example of a kiss package. It's very hacky. However it does display the flexibility and simplicity which makes the kiss package manager fun to work with.
+I took some shortcuts in packaging it and it is not an exemplary example of a kiss package. It's very hacky. However, it does display the flexibility and simplicity which makes the kiss package manager fun to work with.
 
 So this repo compiles and installs all of my project dependencies "batteries included" to /boot ...
 
