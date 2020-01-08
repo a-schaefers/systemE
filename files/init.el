@@ -10,5 +10,3 @@
 (setq shell-file-name "/boot/bin/dash")
 
 ;; TODO
-
-(kill-emacs 0)
