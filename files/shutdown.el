@@ -1,7 +1,17 @@
 #!/bin/setsid /boot/bin/dash
 ":"; LD_LIBRARY_PATH=/boot/emacs exec /boot/bin/emacs --quick --script "$0" "$@" </dev/tty1 >/dev/tty1 2>&1 # -*- mode: emacs-lisp; lexical-binding: t; -*-
 
-;; TODO use ARGV $1
+(require 'subr-x)
+
+(when (not (or (string= "poweroff" (format "%s" (elt argv 0)))
+               (string= "reboot" (format "%s" (elt argv 0)))))
+  (and
+   (message "emacs --script shutdown.el ARGV # [reboot|poweroff]")
+   (kill-emacs 1)))
+
+(if (string= "poweroff" (format "%s" (elt argv 0)))
+    (setq-local goodbye "-p")
+  (setq-local goodbye "-r"))
 
 (setq debug-on-error nil)
 
@@ -56,4 +66,4 @@
 (progn
   (message "Goodbye.")
   (message "%s"
-           (process-exit-code-and-output "ubase-box" "halt" "-p")))
+           (process-exit-code-and-output "ubase-box" "halt" goodbye)))
