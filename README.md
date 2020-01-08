@@ -17,7 +17,7 @@ Additionally from the getty, I use Emacs as a login shell, dotfiles manager, pac
 
 - One pain point is getting a statically compiled Emacs. We don't require this, but it sure would be nice. Unfortunately, when I statically compile Emacs using musl, it results in a broken Emacs.
 
-## This repo is technically a  [kiss linux](getkiss.org) package
+## This repo is technically a  [kiss linux](https://getkiss.org) package
 
 I don't recommend you install this as a package if you use Kiss Linux though. Instead I would recommend you poke around at it and see if you find anything that is useful for yourself that way.
 
