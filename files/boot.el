@@ -160,12 +160,9 @@
 (message "Boot stage complete...")
 
 ;; getty
-(call-process-shell-command "nohup ubase-box respawn ubase-box login &" nil nil 0)
 (call-process-shell-command "nohup ubase-box respawn ubase-box getty /dev/tty2 linux &" nil nil 0)
 (call-process-shell-command "nohup ubase-box respawn ubase-box getty /dev/tty3 linux &" nil nil 0)
 (call-process-shell-command "nohup ubase-box respawn ubase-box getty /dev/tty4 linux &" nil nil 0)
-(call-process-shell-command "nohup ubase-box respawn ubase-box getty /dev/tty5 linux &" nil nil 0)
-(call-process-shell-command "nohup ubase-box respawn ubase-box getty /dev/tty6 linux &" nil nil 0)
 
 ;; process supervisor
 (call-process-shell-command "nohup ubase-box respawn runsvdir -P /var/service &" nil nil 0)
