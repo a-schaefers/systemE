@@ -44,4 +44,5 @@ This includes:
 ;; https://github.com/Sweets/hummingbird
 ;; https://felipec.wordpress.com/2013/11/04/init
 ;; https://www.emacswiki.org/emacs/PersistentProcesses
+;; https://stackoverflow.com/questions/17479529/self-contained-portable-emacs
 ```
