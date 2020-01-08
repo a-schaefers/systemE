@@ -1,5 +1,5 @@
 # systemE
-A lightweight systemd replacement written in Emacs lisp
+A lightweight systemd replacement written in Emacs lisp 😉
 
 ## About
 
