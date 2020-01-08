@@ -17,35 +17,41 @@
     (list (apply 'call-process program nil (current-buffer) nil args)
           (buffer-string))))
 
-(progn ;; TODO this is junk
-  (message "Waiting for services to stop...")
-  (shell-command "sv" nil "sv -w196 force-stop /var/service/*")
-  (shell-command "sv" nil "sv exit /var/service/*"))
+(when (and (executable-find "runsvdir")
+           (eq 0 (call-process "pgrep" nil nil nil "runsvdir")))
+  (progn
+    (message "Waiting for services to stop...")
+    (shell-command "sv -w196 force-stop /var/service/*")
+    (shell-command "sv exit /var/service/*")))
 
 (progn
   (message "Saving random seed...")
   (message "%s"
            (process-exit-code-and-output "dd" "count=1" "bs=512" "if=/dev/random" "of=/var/random.seed")))
 
-(progn  (message "Sending TERM signal to all processes...")
-        (message "%s"
-                 (process-exit-code-and-output "ubase-box" "killall5" "TERM")))
+(progn
+  (message "Sending TERM signal to all processes...")
+  ;; (shell-command (concat "ubase-box killall5 -o " (format "%s" (emacs-pid)) " -s TERM"))
+  (message "%s"
+           (process-exit-code-and-output
+            "ubase-box" "killall5" "-o" (format "%s" (emacs-pid)) "-s" "TERM"))
+  (sleep-for 1)
+  (message "Sending KILL signal to all processes...")
+  ;; (shell-command (concat "ubase-box killall5 -o " (format "%s" (emacs-pid)) " -s KILL"))
+  (message "%s"
+           (process-exit-code-and-output
+            "ubase-box" "killall5" "-o" (format "%s" (emacs-pid)) "-s" "KILL")))
 
-(sleep-for 1)
-
-(progn  (message "Sending KILL signal to all processes...")
-        (message "%s"
-                 (process-exit-code-and-output "ubase-box" "killall5" "KILL")))
-
-(progn  (message "Unmounting filesystems and disabling swap...")
-        (message "%s"
-                 (process-exit-code-and-output "ubase-box" "swapoff" "-a"))
-        (message "%s"
-                 (process-exit-code-and-output "ubase-box" "umount" "-a"))
-        (message "%s"
-                 (process-exit-code-and-output "ubase-box" "mount" "-o" "remount,ro" "/"))
-        (message "%s"
-                 (process-exit-code-and-output "sbase-box" "sync")))
+(progn
+  (message "Unmounting filesystems and disabling swap...")
+  (message "%s"
+           (process-exit-code-and-output "ubase-box" "swapoff" "-a"))
+  (message "%s"
+           (process-exit-code-and-output "ubase-box" "umount" "-a"))
+  (message "%s"
+           (process-exit-code-and-output "ubase-box" "mount" "-o" "remount,ro" "/"))
+  (message "%s"
+           (process-exit-code-and-output "sbase-box" "sync")))
 
 (progn
   (message "Goodbye.")
