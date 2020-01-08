@@ -26,11 +26,12 @@ I took some shortcuts in packaging it and it is not an exemplary example of a ki
 So this repo compiles and installs all of my project dependencies "batteries included" to /boot ...
 
 This includes:
-- sinit
-- dash
 - emacs-nox
+- elisp files
+- sinit
 - ubase
 - sbase
+- dash
 
 ### The ever-growing list of Helpful / Credits / Thank You's
 
