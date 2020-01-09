@@ -3,15 +3,14 @@
 
 (require 'subr-x)
 
-(when (not (or (string= "poweroff" (format "%s" (elt argv 0)))
-               (string= "reboot" (format "%s" (elt argv 0)))))
-  (and
-   (message "emacs --script shutdown.el ARGV # [reboot|poweroff]")
-   (kill-emacs 1)))
-
-(if (string= "poweroff" (format "%s" (elt argv 0)))
-    (setq-local goodbye "-p")
-  (setq-local goodbye "-r"))
+(if (not (or (string= "poweroff" (format "%s" (elt argv 0)))
+             (string= "reboot" (format "%s" (elt argv 0)))))
+    (progn
+      (message "Usage: shutdown.el reboot|poweroff")
+      (kill-emacs 1))
+  (if (string= "poweroff" (format "%s" (elt argv 0)))
+      (setq-local goodbye "-p")
+    (setq-local goodbye "-r")))
 
 (setq debug-on-error nil)
 
