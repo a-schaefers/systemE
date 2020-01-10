@@ -1,5 +1,5 @@
-#!/bin/setsid /boot/bin/dash
-":"; LD_LIBRARY_PATH=/boot/emacs exec /boot/bin/emacs --quick --script "$0" "$@" </dev/tty1 >/dev/tty1 2>&1 # -*- mode: emacs-lisp; lexical-binding: t; -*-
+#!/boot/bin/dash
+":"; exec /boot/bin/emacs --quick --script "$0" "$@" # -*- mode: emacs-lisp; lexical-binding: t; -*-
 
 (require 'subr-x)
 

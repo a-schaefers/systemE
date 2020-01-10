@@ -61,13 +61,7 @@ mv "$1/boot/bin/emacs-26.3" "$1/boot/bin/emacs"
 rm "$1/boot/bin/etags"
 rm "$1/boot/bin/ctags"
 rm "$1/boot/bin/ebrowse"
-rm "$1/boot/bin/emacsclient"
 rm -rf "$1/boot/emacs/systemd"
-
-# Emacs will not static compile but can be contained
-# this could be automated with awk and a loop...
-cp /lib/libncursesw.so.6 "$1/boot/emacs"
-cp /lib/ld-musl-x86_64.so.1 "$1/boot/emacs"
 
 strip "$1/boot/bin"/*
 
