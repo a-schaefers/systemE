@@ -71,17 +71,17 @@
   (make-directory "/dev/shm" t)
   (set-file-modes "/dev/shm" #o755))
 
-(and
- (message "Mounting devpts...")
- (message "%s"
-          (process-exit-code-and-output
-           "ubase-box" "mount" "-o" "mode=0620,gid=5,nosuid" "-nt" "devpts" "devpts" "/dev/pts")))
+(progn
+  (message "Mounting devpts...")
+  (message "%s"
+           (process-exit-code-and-output
+            "ubase-box" "mount" "-o" "mode=0620,gid=5,nosuid" "-nt" "devpts" "devpts" "/dev/pts")))
 
-(and
- (message "Mounting shm...")
- (message "%s"
-          (process-exit-code-and-output
-           "ubase-box" "mount" "-o" "mode=0777,nosuid,nodev" "-nt" "tmpfs" "shm" "/dev/shm")))
+(progn
+  (message "Mounting shm...")
+  (message "%s"
+           (process-exit-code-and-output
+            "ubase-box" "mount" "-o" "mode=0777,nosuid,nodev" "-nt" "tmpfs" "shm" "/dev/shm")))
 
 (when (executable-find "udevd")
   (message "Starting eudev...")
