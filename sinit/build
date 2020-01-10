@@ -1,0 +1,5 @@
+#!/bin/sh -e
+
+make CFLAGS="$CFLAGS -static"
+
+install -Dm 755 sinit "$1/usr/bin/sinit"
