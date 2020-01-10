@@ -21,17 +21,9 @@ Additionally from the getty, I use Emacs as a login shell, dotfiles manager, pac
 
 - One pain point is getting a statically compiled Emacs. We don't require this, but it sure would be nice. Unfortunately, when I statically compile Emacs using musl, it results in a broken Emacs.
 
-## This repo is technically a [kiss linux](https://getkiss.org) package
+## This repo is technically a [kiss linux](https://getkiss.org) overlay
 
-Depends are:
-
-- sinit
-- ubase
-- sbase
-- dash
-- emacs
-
-The sinit package uses my [kiss-overlay](https://github.com/a-schaefers/kiss-overlay), which is on the front of my 'KISS_PATH'.
+I recommend Kiss linux.
 
 ### The ever-growing list of Helpful / Credits / Thank You's
 
