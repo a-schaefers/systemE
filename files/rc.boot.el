@@ -1,15 +1,15 @@
-#!/boot/bin/dash
-":"; exec /boot/bin/emacs --quick --script "$0" "$@" # -*- mode: emacs-lisp; lexical-binding: t; -*-
+#!/bin/dash
+":"; exec /bin/emacs --quick --script "$0" "$@" # -*- mode: emacs-lisp; lexical-binding: t; -*-
 
 (require 'subr-x)
 
 (setq debug-on-error nil)
 
-(setenv "PATH" "/boot/bin:/bin")
-(setq exec-path '("/boot/bin" "/bin"))
+(setenv "PATH" "/bin")
+(setq exec-path '("/bin"))
 
-(setenv "SHELL" "/boot/bin/dash")
-(setq shell-file-name "/boot/bin/dash")
+(setenv "SHELL" "/bin/dash")
+(setq shell-file-name "/bin/dash")
 
 (defun process-exit-code-and-output (program &rest args)
   "Run PROGRAM with ARGS and return the exit code and output in a list."
@@ -18,25 +18,35 @@
           (buffer-string))))
 
 (message
- (concat "Welcome to KISS " (shell-command-to-string "uname -sr")))
-
-(message "%s"
-         (process-exit-code-and-output
-          "ubase-box" "mount" "-o" "nosuid,noexec,nodev" "-t" "proc" "proc" "/proc"))
-
-(message "%s"
-         (process-exit-code-and-output
-          "ubase-box" "mount" "-o" "nosuid,noexec,nodev" "-t" "sysfs" "sys" "/sys"))
-
-(message "%s"
-         (process-exit-code-and-output
-          "ubase-box" "mount" "-o" "mode=0755,nosuid,nodev" "-t" "tmpfs" "run" "/run"))
-
-(message "%s"
-         (process-exit-code-and-output
-          "ubase-box" "mount" "-o" "mode=0755,nosuid" "-t" "devtmpfs" "dev" "/dev"))
+ (concat "Begin systemE initialization..." (shell-command-to-string "uname -sr")))
 
 (progn
+  (message "Mounting proc...")
+  (message "%s"
+           (process-exit-code-and-output
+            "ubase-box" "mount" "-o" "nosuid,noexec,nodev" "-t" "proc" "proc" "/proc")))
+
+(progn
+  (message "Mounting sys...")
+  (message "%s"
+           (process-exit-code-and-output
+            "ubase-box" "mount" "-o" "nosuid,noexec,nodev" "-t" "sysfs" "sys" "/sys")))
+
+(progn
+  (message "Mounting run...")
+  (message "%s"
+           (process-exit-code-and-output
+            "ubase-box" "mount" "-o" "mode=0755,nosuid,nodev" "-t" "tmpfs" "run" "/run")))
+
+(progn
+  (message "Mounting dev...")
+  (message "%s"
+           (process-exit-code-and-output
+            "ubase-box" "mount" "-o" "mode=0755,nosuid" "-t" "devtmpfs" "dev" "/dev")))
+
+(progn
+  (message "Creating /run directories...")
+
   (make-directory "/run" t)
   (set-file-modes "/run" #o755)
 
@@ -61,13 +71,17 @@
   (make-directory "/dev/shm" t)
   (set-file-modes "/dev/shm" #o755))
 
-(message "%s"
-         (process-exit-code-and-output
-          "ubase-box" "mount" "-o" "mode=0620,gid=5,nosuid" "-nt" "devpts" "devpts" "/dev/pts"))
+(and
+ (message "Mounting devpts...")
+ (message "%s"
+          (process-exit-code-and-output
+           "ubase-box" "mount" "-o" "mode=0620,gid=5,nosuid" "-nt" "devpts" "devpts" "/dev/pts")))
 
-(message "%s"
-         (process-exit-code-and-output
-          "ubase-box" "mount" "-o" "mode=0777,nosuid,nodev" "-nt" "tmpfs" "shm" "/dev/shm"))
+(and
+ (message "Mounting shm...")
+ (message "%s"
+          (process-exit-code-and-output
+           "ubase-box" "mount" "-o" "mode=0777,nosuid,nodev" "-nt" "tmpfs" "shm" "/dev/shm")))
 
 (when (executable-find "udevd")
   (message "Starting eudev...")
@@ -119,10 +133,10 @@
   (message "Seeding random...")
   (if (file-exists-p "/var/random.seed")
       (start-process-shell-command "cat" nil "cat /var/random.seed > /dev/urandom")
-    (and
-     (message "This may hang. Mash the keyboard to generate entropy...")
-     (message "%s"
-              (process-exit-code-and-output "dd" "count=1" "bs=512" "if=/dev/random" "of=/var/random.seed")))))
+    (progn
+      (message "This may hang. Mash the keyboard to generate entropy...")
+      (message "%s"
+               (process-exit-code-and-output "dd" "count=1" "bs=512" "if=/dev/random" "of=/var/random.seed")))))
 
 (progn
   (message "Setting up loopback...")
@@ -149,7 +163,7 @@
            (process-exit-code-and-output "sysctl" "-p" "/etc/sysctl.conf")))
 
 (when (executable-find "udevd")
-  (message "Exit udev...")
+  (message "Exiting eudev...")
   (message "%s"
            (process-exit-code-and-output "udevadm" "control" "--exit")))
 
@@ -157,15 +171,16 @@
   (message "Storing dmesg output to /var/log...")
   (start-process-shell-command "dmesg" nil "dmesg > /var/log/dmesg.log"))
 
+(progn
+  (message "Starting process supervsor...")
+  (call-process-shell-command "nohup ubase-box respawn runsvdir -P /var/service &" nil nil 0))
+
 (message "Boot stage complete...")
 
-;; getty
-(call-process-shell-command "nohup ubase-box respawn ubase-box getty /dev/tty1 linux &" nil nil 0)
-(call-process-shell-command "nohup ubase-box respawn ubase-box getty /dev/tty2 linux &" nil nil 0)
-(call-process-shell-command "nohup ubase-box respawn ubase-box getty /dev/tty3 linux &" nil nil 0)
-(call-process-shell-command "nohup ubase-box respawn ubase-box getty /dev/tty4 linux &" nil nil 0)
-
-;; process supervisor
-(call-process-shell-command "nohup ubase-box respawn runsvdir -P /var/service &" nil nil 0)
+(progn
+  (call-process-shell-command "nohup ubase-box respawn ubase-box getty /dev/tty1 linux &" nil nil 0)
+  (call-process-shell-command "nohup ubase-box respawn ubase-box getty /dev/tty2 linux &" nil nil 0)
+  (call-process-shell-command "nohup ubase-box respawn ubase-box getty /dev/tty3 linux &" nil nil 0)
+  (call-process-shell-command "nohup ubase-box respawn ubase-box getty /dev/tty4 linux &" nil nil 0))
 
 (kill-emacs 0)

@@ -1,5 +1,5 @@
-#!/boot/bin/dash
-":"; exec /boot/bin/emacs --quick --script "$0" "$@" # -*- mode: emacs-lisp; lexical-binding: t; -*-
+#!/bin/dash
+":"; exec /bin/emacs --quick --script "$0" "$@" # -*- mode: emacs-lisp; lexical-binding: t; -*-
 
 (require 'subr-x)
 
@@ -14,11 +14,11 @@
 
 (setq debug-on-error nil)
 
-(setenv "PATH" "/boot/bin:/bin")
-(setq exec-path '("/boot/bin" "/bin"))
+(setenv "PATH" "/bin")
+(setq exec-path '("/bin"))
 
-(setenv "SHELL" "/boot/bin/dash")
-(setq shell-file-name "/boot/bin/dash")
+(setenv "SHELL" "/bin/dash")
+(setq shell-file-name "/bin/dash")
 
 (defun process-exit-code-and-output (program &rest args)
   "Run PROGRAM with ARGS and return the exit code and output in a list."
