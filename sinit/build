@@ -1,5 +1,7 @@
 #!/bin/sh -e
 
+for diff in *.diff; do patch -p1 < "$diff"; done
+
 make CFLAGS="$CFLAGS -static"
 
 install -Dm 755 sinit "$1/usr/bin/sinit"
