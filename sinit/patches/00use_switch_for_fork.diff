@@ -1,0 +1,22 @@
+diff --git a/sinit.c b/sinit.c
+@@ -74,16 +74,14 @@ sigreboot(void)
+ static void
+ spawn(char *const argv[])
+ {
+-	pid_t pid;
+-
+-	pid = fork();
+-	if (pid < 0) {
+-		perror("fork");
+-	} else if (pid == 0) {
++	switch (fork()) {
++	case 0:
+ 		sigprocmask(SIG_UNBLOCK, &set, NULL);
+ 		setsid();
+ 		execvp(argv[0], argv);
+ 		perror("execvp");
+ 		_exit(1);
++	case -1:
++		perror("fork");
+ 	}
+ }
