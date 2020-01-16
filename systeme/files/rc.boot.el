@@ -5,11 +5,8 @@
 
 (setq debug-on-error nil)
 
-(setenv "PATH" "/bin")
-(setq exec-path '("/bin"))
-
-(setenv "SHELL" "/bin/dash")
-(setq shell-file-name "/bin/dash")
+(setenv "PATH" "/usr/local/bin:/bin")
+(setq exec-path '("/usr/local/bin" "/bin"))
 
 (defun process-exit-code-and-output (program &rest args)
   "Run PROGRAM with ARGS and return the exit code and output in a list."
@@ -83,6 +80,15 @@
            (process-exit-code-and-output
             "ubase-box" "mount" "-o" "mode=0777,nosuid,nodev" "-nt" "tmpfs" "shm" "/dev/shm")))
 
+(progn
+  (message "Seeding random...")
+  (if (file-exists-p "/var/random.seed")
+      (start-process-shell-command "cat" nil "cat /var/random.seed > /dev/urandom")
+    (progn
+      (message "This may hang. Mash the keyboard to generate entropy...")
+      (message "%s"
+               (process-exit-code-and-output "dd" "count=1" "bs=512" "if=/dev/random" "of=/var/random.seed")))))
+
 (when (executable-find "udevd")
   (message "Starting eudev...")
   (message "%s"
@@ -122,21 +128,15 @@
                 "ubase-box" "mount" "-o" "remount,rw" "/"))
       (emergency)))
 
+(when (file-exists-p "/etc/rc.0.local.el")
+  (load-file "/etc/rc.0.local.el"))
+
 (progn
   (message "Mounting all local filesystems...")
   (or (message "%s"
                (process-exit-code-and-output
                 "ubase-box" "mount" "-a"))
       (emergency)))
-
-(progn
-  (message "Seeding random...")
-  (if (file-exists-p "/var/random.seed")
-      (start-process-shell-command "cat" nil "cat /var/random.seed > /dev/urandom")
-    (progn
-      (message "This may hang. Mash the keyboard to generate entropy...")
-      (message "%s"
-               (process-exit-code-and-output "dd" "count=1" "bs=512" "if=/dev/random" "of=/var/random.seed")))))
 
 (progn
   (message "Setting up loopback...")
@@ -162,25 +162,38 @@
   (message "%s"
            (process-exit-code-and-output "sysctl" "-p" "/etc/sysctl.conf")))
 
-(when (executable-find "udevd")
-  (message "Exiting eudev...")
-  (message "%s"
-           (process-exit-code-and-output "udevadm" "control" "--exit")))
+;; optionally disable udevd after it does it's main job.
+;; (when (executable-find "udevd")
+;;   (message "Exiting eudev...")
+;;   (message "%s"
+;;            (process-exit-code-and-output "udevadm" "control" "--exit")))
 
 (progn
   (message "Storing dmesg output to /var/log...")
   (start-process-shell-command "dmesg" nil "dmesg > /var/log/dmesg.log"))
 
 (progn
-  (message "Starting process supervsor...")
-  (call-process-shell-command "nohup ubase-box respawn runsvdir -P /var/service &" nil nil 0))
+  (message "Starting services...")
+
+  ;; supervised
+  ;; (progn
+  ;;   (message "Starting process supervsor...")
+  ;;   (call-process-shell-command "nohup ubase-box respawn runsvdir -P /var/service &" nil nil 0))
+
+  ;; non-supervised
+  (call-process-shell-command "nohup syslogd -n &" nil nil 0)
+  (call-process-shell-command "nohup dhcpcd -BM &" nil nil 0)
+  (call-process-shell-command "nohup /bin/sshd &" nil nil 0))
+
+(when (file-exists-p "/etc/rc.1.local.el")
+  (load-file "/etc/rc.1.local.el"))
 
 (message "Boot stage complete...")
 
+(shell-command "clear")
+
 (progn
-  (call-process-shell-command "nohup ubase-box respawn ubase-box getty /dev/tty1 linux &" nil nil 0)
-  (call-process-shell-command "nohup ubase-box respawn ubase-box getty /dev/tty2 linux &" nil nil 0)
-  (call-process-shell-command "nohup ubase-box respawn ubase-box getty /dev/tty3 linux &" nil nil 0)
-  (call-process-shell-command "nohup ubase-box respawn ubase-box getty /dev/tty4 linux &" nil nil 0))
+  (call-process-shell-command "nohup /usr/local/bin/respawn /usr/local/bin/getty /dev/tty1 linux /usr/local/bin/login -p adam &" nil nil 0)
+  (call-process-shell-command "nohup /usr/local/bin/respawn /usr/local/bin/getty /dev/tty2 linux /usr/local/bin/login -p root &" nil nil 0))
 
 (kill-emacs 0)
