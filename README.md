@@ -20,9 +20,6 @@ A lightweight systemd replacement written in Emacs lisp
 > > It's called a joke, guys.
 > > The README is literally full of them.
 
-> This is pretty interesting but sketchy..
-> Also.. Lets be cautious about getting Emacs reapable.. Do we really want to witness hoard of abominations (nice things too ofc) that would surface! :D
-
 > systemd and its ecosystem isn't built inside of Emacs.
 > > That's because systemd is a mild editor lacking a decent lisp os
 
