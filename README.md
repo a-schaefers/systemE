@@ -3,6 +3,29 @@
 # systemE
 A lightweight systemd replacement written in Emacs lisp
 
+## What people are saying
+
+> "Kind of taking that whole "Emacs is an operating system" thing a bit too far, aren't we?"
+
+> "At last we have solved the init controversy."
+
+> "Well I guess while you're writing this you aren't creating atomic robots to take over the earth."
+
+> To quote Strong Bad, this is impressive, disturbing, and makes me uncomfortable!
+
+> So close to GNU/Emacs/Linux
+
+> I think this is really cool, but calling it a "systemd replacement" feels like click bait to me.
+
+> > It's called a joke, guys.
+> > The README is literally full of them.
+
+> This is pretty interesting but sketchy..
+> Also.. Lets be cautious about getting Emacs reapable.. Do we really want to witness hoard of abominations (nice things too ofc) that would surface! :D
+
+> systemd and its ecosystem isn't built inside of Emacs.
+> > That's because systemd is a mild editor lacking a decent lisp os
+
 ## About
 
 Using the tooling in this repo, I am able to boot from linux to sinit as PID1, and from there to Emacs acting as PID2 using --script mode, performing all typical rc.boot system initialization using Emacs lisp until we hit the getty.
