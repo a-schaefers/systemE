@@ -38,7 +38,7 @@ Using the tooling in this repo, I am able to boot from linux to sinit as PID1, a
 
 - One pain point is getting a statically compiled Emacs. We don't require this, but it sure would be nice. Unfortunately, when I statically compile Emacs using musl, it results in a broken Emacs.
 
-## This repo is technically a [kiss linux](https://k1ss.org) overlay
+## This repo is technically a [kiss linux](https://k1sslinux.org) overlay
 
 I recommend Kiss linux.
 
